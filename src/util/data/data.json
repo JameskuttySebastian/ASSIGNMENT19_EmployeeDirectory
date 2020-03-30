@@ -1,0 +1,66 @@
+[
+  {
+    "employeeId": 1,
+    "jobTitleName": "Director",
+    "firstName": "Thomas",
+    "lastName": "Cook",
+    "phoneNumber": "408-1234567",
+    "emailAddress": "thomas@gmail.com"
+  },
+  {
+    "employeeId": 2,
+    "jobTitleName": "Business Manager",
+    "firstName": "Mathew",
+    "lastName": "Wade",
+    "phoneNumber": "408-1234567",
+    "emailAddress": "mathew@gmail.com"
+  },
+  {
+    "employeeId": 3,
+    "jobTitleName": "Business Analyst",
+    "firstName": "Mathew",
+    "lastName": "Ford",
+    "phoneNumber": "408-1234567",
+    "emailAddress": "mat@gmail.com"
+  },
+  {
+    "employeeId": 4,
+    "jobTitleName": "Business Analyst",
+    "firstName": "John",
+    "lastName": "Ish",
+    "phoneNumber": "408-1234567",
+    "emailAddress": "john111@gmail.com"
+  },
+  {
+    "employeeId": 5,
+    "jobTitleName": "Developer",
+    "firstName": "Romin",
+    "lastName": "Irani",
+    "phoneNumber": "408-1234567",
+    "emailAddress": "romin.k.irani@gmail.com"
+  },
+  {
+    "employeeId": 6,
+    "jobTitleName": "Developer",
+    "firstName": "Neil",
+    "lastName": "Irani",
+    "phoneNumber": "408-1111111",
+    "emailAddress": "neilrirani@gmail.com"
+  },
+  {
+    "employeeId": 7,
+    "jobTitleName": "Program Director",
+    "firstName": "Tom",
+    "lastName": "Hanks",
+    "phoneNumber": "408-2222222",
+    "emailAddress": "tomhanks@gmail.com"
+  },
+  {
+    "employeeId": 8,
+    "jobTitleName": "Application Designer",
+    "firstName": "Tim",
+    "lastName": "Cook",
+    "phoneNumber": "408-2222222",
+    "emailAddress": "im@gmail.com"
+  }
+]

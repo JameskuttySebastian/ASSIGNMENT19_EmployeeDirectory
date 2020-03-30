@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import employees from "../src/util/data/data.json";
+import TableData from "./components/TableData";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+let employeeList = employees;
+
+const employeeListHtml = () => {
+  return employeeList.map((employee, index) => (
+    <TableData
+      key={index}
+      employeeId={employee.employeeId}
+      jobTitleName={employee.jobTitleName}
+      firstName={employee.firstName}
+      lastName={employee.lastName}
+      phoneNumber={employee.phoneNumber}
+      emailAddress={employee.emailAddress}
+    />
+  ));
+};
+class App extends Component {
+  state = {
+    employees
+  };
+  render() {
+    return (
+      <div className="container">
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Employee ID</th>
+              <th scope="col">Title</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Email</th>
+            </tr>
+          </thead>
+          <tbody>{employeeListHtml()}</tbody>
+        </table>
+      </div>
+    );
+  }
 }
 
 export default App;
