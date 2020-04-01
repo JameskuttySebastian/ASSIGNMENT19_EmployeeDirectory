@@ -39,16 +39,19 @@ class App extends Component {
   }
 
   //Creating dropdown list of distinct values for selected column
-  filterByColumnChange = event => {
+  filterByColumnChange = async event => {
     const searchByColumn = event.target.value;
     //await is used since setstate is asynchronoue
     this.setStateValue("searchColumnValue", searchByColumn); // setting to selected value each time
 
     //if user select back "All", then remove all filters
     if (searchByColumn === "all") {
-      this.setStateValue("sortedArray", employees); // this is for sorting
-      this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees)); //putting back all the employees
-      this.setStateValue("searchValueHtmlArray", ""); // setting to empty value
+      await this.setStateValue("sortedArray", employees); // this is for sorting
+      await this.setStateValue(
+        "tableRowHtmlArray",
+        this.employeeListHtml(employees)
+      ); //putting back all the employees
+      await this.setStateValue("searchValueHtmlArray", ""); // setting to empty value
     }
     //if user select a specific column, get distinct values and update dropdoen list for column values
     else {
@@ -99,21 +102,20 @@ class App extends Component {
     console.log(searchValue);
     // sort by name
     let sortedObjectArray = this.state.sortedArray.sort(function(a, b) {
-      var nameA = a[searchValue].toUpperCase(); // ignore upper and lowercase
-      var nameB = b[searchValue].toUpperCase(); // ignore upper and lowercase
+      var nameA = a[searchValue];
+      var nameB = b[searchValue];
       if (nameA < nameB) {
         return -1;
       }
       if (nameA > nameB) {
         return 1;
       }
-
       // names must be equal
       return 0;
     });
-    console.log(sortedObjectArray);
+
     this.setStateValue("sortedArray", sortedObjectArray);
-    console.log(this.state.sortedArray);
+
     this.setStateValue(
       "tableRowHtmlArray",
       this.employeeListHtml(sortedObjectArray)
@@ -167,6 +169,7 @@ class App extends Component {
                 id="filter-column"
                 onChange={this.sortByColumnChange}
               >
+                <option value="employeeId">Employee ID</option>
                 <option value="jobTitleName">Title</option>
                 <option value="firstName">First Name</option>
                 <option value="lastName">Last Name</option>
