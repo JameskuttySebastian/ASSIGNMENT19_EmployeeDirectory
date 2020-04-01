@@ -5,15 +5,19 @@ import DropdownOption from "./components/DropdownOption";
 
 class App extends Component {
   state = {
-    tableRowHtmlArray: "",
+    tableRowHtmlArray: [],
     searchColumnValue: "all",
-    searchColumnValueArray: [],
     searchValue: "",
-    searchValueHtmlArray: ""
+    searchValueHtmlArray: []
   };
 
+  setStateValue = (stateToUpdate, value) => {
+    this.setState({ [stateToUpdate]: value });
+  };
+
+  //Creating the data rows for employees
   employeeListHtml = resultArray => {
-    let htmlTable = resultArray.map((employee, index) => (
+    let tableRowHtml = resultArray.map((employee, index) => (
       <TableData
         key={index}
         employeeId={employee.employeeId}
@@ -24,50 +28,43 @@ class App extends Component {
         emailAddress={employee.emailAddress}
       />
     ));
-    return htmlTable;
+    return tableRowHtml;
   };
 
+  componentDidMount() {
+    this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees));
+  }
+
+  //Creating dropdown list of distinct values for selected column
   filterColumnChange = event => {
     const searchVal = event.target.value;
-    this.setStateValue( searchColumn, searchVal );
+    this.setStateValue("searchColumn", searchVal);
+    //if user select back "All", then remove all filters
     if (searchVal === "all") {
-        this.setStateValue( searchColumnArray, this.employeeListHtml(employees) );//putting back all the employees
-        this.setStateValue( searchColumnValueArray, [] ); // setting to empty array
-        this.setStateValue( searchValue, "" ); // setting to empty value
-        this.setStateValue( searchValueState, "" );  // setting to empty value    
+      this.setStateValue("searchColumnArray", this.employeeListHtml(employees)); //putting back all the employees
+      this.setStateValue("searchValueHtmlArray", ""); // setting to empty value
     }
+    //if user select a specific column, get distinct values and update dropdoen list for column values
     else {
-      let columnList = this.createDropdownList(searchVal);
-      this.setStateValue( searchColumnValueArray, columnList );
+      let columnList = this.createDropdownList(searchVal); //creating distinct column values
+      let dropdownListHtml = this.createDropdownListMenu(columnList);
+      this.setStateValue("searchColumnValueArray", dropdownListHtml);
     }
   };
-
-  setStateValue = (stateToUpdate, value) => {
-    this.setState({ stateToUpdate: value });
-  }
 
   createDropdownList = async searchVal => {
     let colValues = Array.from(
       new Set(employees.map(employee => employee[searchVal]))
     );
-    return colValues; //retruning column value array  
+    return colValues; //retruning column value array
   };
 
-
-  await this.setState({
-    searchColumnArray: colValues,
-    searchColumnChange: true
-  });
-  this.createDropdownListMenu();
-
-  createDropdownListMenu = () => {
-    if (this.state.searchColumnArray.length) {
-      let dropdownList = this.state.searchColumnArray.map((val, index) => (
+  createDropdownListMenu = columnList => {
+    if (this.state.searchColumnValueArray.length) {
+      let dropdownList = this.state.searchColumnValueArray.map((val, index) => (
         <DropdownOption key={index} value={val} />
       ));
-      console.log("dropdownList Table: " + dropdownList);
-      this.setState({ searchValueState: dropdownList });
-      console.log("dropdownList State: " + this.searchValueState);
+      return dropdownList;
     }
   };
 
@@ -76,12 +73,11 @@ class App extends Component {
     let filteredArray = employees.filter(
       employee => employee[this.state.searchColumn] === searchValue
     );
-    this.setState({ tableState: this.employeeListHtml(filteredArray) });
+    this.setStateValue(
+      "tableRowHtmlArray",
+      this.employeeListHtml(filteredArray)
+    );
   };
-
-  componentDidMount() {
-    this.setState({ tableState: this.employeeListHtml(employees) });
-  }
 
   render() {
     return (
@@ -97,7 +93,7 @@ class App extends Component {
           <option value="emailAddress">Email</option>
         </select>
         <select id="columnValue" onChange={e => this.filterValueChange(e)}>
-          {this.state.searchValueState}
+          {this.state.searchValueHtmlArray}
         </select>
         <table className="table table-striped">
           <thead>
@@ -110,7 +106,7 @@ class App extends Component {
               <th scope="col">Email</th>
             </tr>
           </thead>
-          <tbody>{this.state.tableState}</tbody>
+          <tbody>{this.state.tableRowHtmlArray}</tbody>
         </table>
       </div>
     );
