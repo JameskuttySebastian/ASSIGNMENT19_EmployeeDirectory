@@ -7,12 +7,12 @@ class App extends Component {
   state = {
     tableRowHtmlArray: [],
     searchColumnValue: "all",
-    searchValue: "",
     searchValueHtmlArray: []
   };
 
   //This is for setting all the states
   setStateValue = (stateToUpdate, value) => {
+    console.log("2. from setStateValue : " + value);
     this.setState({ [stateToUpdate]: value });
   };
 
@@ -38,8 +38,14 @@ class App extends Component {
   }
 
   //Creating dropdown list of distinct values for selected column
-  filterColumnChange = event => {
+  filterColumnChange = async event => {
     const searchByColumn = event.target.value;
+    console.log("1. searchByColumn : " + searchByColumn);
+    //await is used since setstate is asynchronoue
+    await this.setStateValue("searchColumnValue", searchByColumn); // setting to selected value each time
+    console.log(
+      "3. from state searchColumnValue: " + this.state.searchColumnValue
+    );
     //if user select back "All", then remove all filters
     if (searchByColumn === "all") {
       this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees)); //putting back all the employees
@@ -48,10 +54,8 @@ class App extends Component {
     //if user select a specific column, get distinct values and update dropdoen list for column values
     else {
       let columnValueArray = this.createDropdownList(searchByColumn); //creating distinct column values
-      console.log(columnValueArray);
       let columnValueHtmlArray = this.createDropdownListMenu(columnValueArray);
-      console.log(columnValueHtmlArray);
-      this.setStateValue("searchColumnValueArray", columnValueHtmlArray);
+      this.setStateValue("searchValueHtmlArray", columnValueHtmlArray);
     }
   };
 
@@ -73,12 +77,15 @@ class App extends Component {
 
   filterValueChange = async event => {
     const searchValue = event.target.value;
-    let filteredArray = employees.filter(
-      employee => employee[this.state.searchColumn] === searchValue
+    console.log(searchValue);
+    console.log(this.state.searchByColumn);
+    let filteredEmployeeArray = employees.filter(
+      employee => employee[this.state.searchColumnValue] === searchValue
     );
+    console.log(filteredEmployeeArray);
     this.setStateValue(
       "tableRowHtmlArray",
-      this.employeeListHtml(filteredArray)
+      this.employeeListHtml(filteredEmployeeArray)
     );
   };
 
@@ -97,7 +104,7 @@ class App extends Component {
           <option value="emailAddress">Email</option>
         </select>
         {/* This section is dynamically created based on column to filter */}
-        <select id="columnValue" onChange={e => this.filterValueChange(e)}>
+        <select id="columnValue" onChange={this.filterValueChange}>
           {this.state.searchValueHtmlArray}
         </select>
         {/* This section of the table is statically created since columns are not changing */}
