@@ -8,9 +8,7 @@ class App extends Component {
     tableState: "",
     searchColumn: "all",
     searchColumnArray: [],
-    searchColumnChange: false,
     searchValue: "",
-    searchValueChange: false,
     searchValueState: ""
   };
 
@@ -33,19 +31,16 @@ class App extends Component {
     const searchVal = event.target.value;
     this.setState({ searchColumn: searchVal });
     if (searchVal === "all") {
-      this.setState({ tableState: this.employeeListHtml(employees) });
+      this.setState({
+        tableState: this.employeeListHtml(employees),
+        searchColumnArray: [],
+        searchValue: "",
+        searchValueState: ""
+      });
     } else {
       this.createDropdownList(searchVal);
       //   console.log("searchColumnChange: " + this.state.searchColumnChange); // this is running after createDropdownList()
     }
-  };
-
-  filterValueChange = async event => {
-    const searchValue = event.target.value;
-    let filteredArray = employees.filter(
-      employee => employee[this.state.searchColumn] === searchValue
-    );
-    this.setState({ tableState: this.employeeListHtml(filteredArray) });
   };
 
   createDropdownList = async searchVal => {
@@ -69,6 +64,14 @@ class App extends Component {
       this.setState({ searchValueState: dropdownList });
       console.log("dropdownList State: " + this.searchValueState);
     }
+  };
+
+  filterValueChange = async event => {
+    const searchValue = event.target.value;
+    let filteredArray = employees.filter(
+      employee => employee[this.state.searchColumn] === searchValue
+    );
+    this.setState({ tableState: this.employeeListHtml(filteredArray) });
   };
 
   componentDidMount() {
