@@ -38,14 +38,12 @@ class App extends Component {
   }
 
   //Creating dropdown list of distinct values for selected column
-  filterColumnChange = async event => {
+  filterByColumnChange = event => {
     const searchByColumn = event.target.value;
     console.log("1. searchByColumn : " + searchByColumn);
     //await is used since setstate is asynchronoue
-    await this.setStateValue("searchColumnValue", searchByColumn); // setting to selected value each time
-    console.log(
-      "3. from state searchColumnValue: " + this.state.searchColumnValue
-    );
+    this.setStateValue("searchColumnValue", searchByColumn); // setting to selected value each time
+
     //if user select back "All", then remove all filters
     if (searchByColumn === "all") {
       this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees)); //putting back all the employees
@@ -54,7 +52,7 @@ class App extends Component {
     //if user select a specific column, get distinct values and update dropdoen list for column values
     else {
       let columnValueArray = this.createDropdownList(searchByColumn); //creating distinct column values
-      let columnValueHtmlArray = this.createDropdownListMenu(columnValueArray);
+      let columnValueHtmlArray = this.createDropdownListHtml(columnValueArray);
       this.setStateValue("searchValueHtmlArray", columnValueHtmlArray);
     }
   };
@@ -66,7 +64,7 @@ class App extends Component {
     return columnValueArray; //retruning column value array
   };
 
-  createDropdownListMenu = uniqueColumnValueArray => {
+  createDropdownListHtml = uniqueColumnValueArray => {
     if (uniqueColumnValueArray.length) {
       let uniqueColumnValueHtmlArray = uniqueColumnValueArray.map(
         (val, index) => <DropdownOption key={index} value={val} />
@@ -76,9 +74,12 @@ class App extends Component {
   };
 
   filterValueChange = async event => {
-    const searchValue = event.target.value;
-    console.log(searchValue);
-    console.log(this.state.searchByColumn);
+    let searchValue = event.target.value;
+    // if the column value is an integer (for user id column), then assign the value as integer
+    if (searchValue == parseInt(searchValue, 10)) {
+      searchValue = parseInt(searchValue);
+    }
+    // filter based on search value
     let filteredEmployeeArray = employees.filter(
       employee => employee[this.state.searchColumnValue] === searchValue
     );
@@ -94,7 +95,7 @@ class App extends Component {
       <div className="container">
         <h1>Employee Dictionary</h1>
         {/* This section is statically created since columns are not changing */}
-        <select onChange={this.filterColumnChange}>
+        <select onChange={this.filterByColumnChange}>
           <option value="all">All</option>
           <option value="employeeId">Employee ID</option>
           <option value="jobTitleName">Title</option>
