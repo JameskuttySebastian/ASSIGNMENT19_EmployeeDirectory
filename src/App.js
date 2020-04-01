@@ -11,6 +11,7 @@ class App extends Component {
     searchValueHtmlArray: []
   };
 
+  //This is for setting all the states
   setStateValue = (stateToUpdate, value) => {
     this.setState({ [stateToUpdate]: value });
   };
@@ -31,6 +32,7 @@ class App extends Component {
     return tableRowHtml;
   };
 
+  //This is for updating table for first loading
   componentDidMount() {
     this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees));
   }
@@ -83,6 +85,7 @@ class App extends Component {
     return (
       <div className="container">
         <h1>Employee Dictionary</h1>
+        {/* This section is statically created since columns are not changing */}
         <select onChange={this.filterColumnChange}>
           <option value="all">All</option>
           <option value="employeeId">Employee ID</option>
@@ -92,9 +95,11 @@ class App extends Component {
           <option value="phoneNumber">Phone</option>
           <option value="emailAddress">Email</option>
         </select>
+        {/* This section is dynamically created based on column to filter */}
         <select id="columnValue" onChange={e => this.filterValueChange(e)}>
           {this.state.searchValueHtmlArray}
         </select>
+        {/* This section of the table is statically created since columns are not changing */}
         <table className="table table-striped">
           <thead>
             <tr>
@@ -106,6 +111,7 @@ class App extends Component {
               <th scope="col">Email</th>
             </tr>
           </thead>
+          {/* This section of the table is dynamically created */}
           <tbody>{this.state.tableRowHtmlArray}</tbody>
         </table>
       </div>
