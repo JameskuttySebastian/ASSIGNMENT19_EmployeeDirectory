@@ -57,6 +57,7 @@ class App extends Component {
     }
   };
 
+  //Getting columns for drop down list for select column
   createDropdownList = searchByColumn => {
     let columnValueArray = Array.from(
       new Set(employees.map(employee => employee[searchByColumn]))
@@ -64,6 +65,7 @@ class App extends Component {
     return columnValueArray; //retruning column value array
   };
 
+  //Creating html for drop down list for select column
   createDropdownListHtml = uniqueColumnValueArray => {
     if (uniqueColumnValueArray.length) {
       let uniqueColumnValueHtmlArray = uniqueColumnValueArray.map(
@@ -73,6 +75,7 @@ class App extends Component {
     }
   };
 
+  // filter array based on filter condition
   filterValueChange = async event => {
     let searchValue = event.target.value;
     // if the column value is an integer (for user id column), then assign the value as integer
@@ -109,7 +112,7 @@ class App extends Component {
           {this.state.searchValueHtmlArray}
         </select>
         {/* This section of the table is statically created since columns are not changing */}
-        <table className="table table-striped">
+        <table>
           <thead>
             <tr>
               <th scope="col">Employee ID</th>
