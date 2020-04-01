@@ -35,7 +35,7 @@ class App extends Component {
 
   //This is for updating table for first loading
   componentDidMount() {
-    this.setStateValue("sortedArray", employees); // this is for sorting
+    this.updateSortedArray(employees); // this is for sorting
     this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees));
   }
 
@@ -44,10 +44,10 @@ class App extends Component {
     const searchByColumn = event.target.value;
     //await is used since setstate is asynchronoue
     this.setStateValue("searchColumnValue", searchByColumn); // setting to selected value each time
-
+    this.updateSortedArray(employees);
     //if user select back "All", then remove all filters
     if (searchByColumn === "all") {
-      await this.setStateValue("sortedArray", employees); // this is for sorting
+      // this is for sorting
       await this.setStateValue(
         "tableRowHtmlArray",
         this.employeeListHtml(employees)
@@ -61,6 +61,10 @@ class App extends Component {
       this.setStateValue("searchValueHtmlArray", columnValueHtmlArray);
     }
   };
+
+  async updateSortedArray(sortedArray) {
+    await this.setStateValue("sortedArray", sortedArray);
+  }
 
   //Getting columns for drop down list for select column
   createDropdownList = searchByColumn => {
@@ -91,7 +95,8 @@ class App extends Component {
     let filteredEmployeeArray = employees.filter(
       employee => employee[this.state.searchColumnValue] === searchValue
     );
-    await this.setStateValue("sortedArray", filteredEmployeeArray); // this is for sorting after filter
+    this.updateSortedArray(filteredEmployeeArray); // this is for sorting after filter
+
     await this.setStateValue(
       "tableRowHtmlArray",
       this.employeeListHtml(filteredEmployeeArray)
@@ -114,13 +119,11 @@ class App extends Component {
       // names must be equal
       return 0;
     });
-
-    this.setStateValue("sortedArray", sortedObjectArray);
-
+    this.updateSortedArray(sortedObjectArray); // update after sorting
     this.setStateValue(
       "tableRowHtmlArray",
       this.employeeListHtml(sortedObjectArray)
-    );
+    ); // get all the html and update state
   };
 
   render() {
