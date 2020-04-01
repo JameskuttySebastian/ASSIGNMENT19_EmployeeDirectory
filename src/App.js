@@ -34,6 +34,7 @@ class App extends Component {
 
   //This is for updating table for first loading
   componentDidMount() {
+    this.setStateValue("sortedArray", employees); // this is for sorting
     this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees));
   }
 
@@ -45,7 +46,7 @@ class App extends Component {
 
     //if user select back "All", then remove all filters
     if (searchByColumn === "all") {
-      this.setStateValue("searchValueHtmlArray", "");
+      this.setStateValue("sortedArray", employees); // this is for sorting
       this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees)); //putting back all the employees
       this.setStateValue("searchValueHtmlArray", ""); // setting to empty value
     }
@@ -86,7 +87,8 @@ class App extends Component {
     let filteredEmployeeArray = employees.filter(
       employee => employee[this.state.searchColumnValue] === searchValue
     );
-    this.setStateValue(
+    await this.setStateValue("sortedArray", filteredEmployeeArray); // this is for sorting after filter
+    await this.setStateValue(
       "tableRowHtmlArray",
       this.employeeListHtml(filteredEmployeeArray)
     );
@@ -94,11 +96,11 @@ class App extends Component {
 
   sortByColumnChange = event => {
     let searchValue = event.target.value;
-
+    console.log(searchValue);
     // sort by name
-    items.sort(function(a, b) {
-      var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-      var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+    let sortedObjectArray = this.state.sortedArray.sort(function(a, b) {
+      var nameA = a[searchValue].toUpperCase(); // ignore upper and lowercase
+      var nameB = b[searchValue].toUpperCase(); // ignore upper and lowercase
       if (nameA < nameB) {
         return -1;
       }
@@ -109,15 +111,24 @@ class App extends Component {
       // names must be equal
       return 0;
     });
+    console.log(sortedObjectArray);
+    this.setStateValue("sortedArray", sortedObjectArray);
+    console.log(this.state.sortedArray);
+    this.setStateValue(
+      "tableRowHtmlArray",
+      this.employeeListHtml(sortedObjectArray)
+    );
   };
 
   render() {
     return (
       <div>
-        <div class="jumbotron jumbotron-fluid">
-          <div class="container">
-            <h2 class="display-4">Employee Dictionary</h2>
-            <p class="lead">Current employees database for the organisation.</p>
+        <div className="jumbotron jumbotron-fluid">
+          <div className="container">
+            <h2 className="display-4">Employee Dictionary</h2>
+            <p className="lead">
+              Current employees database for the organisation.
+            </p>
           </div>
         </div>
 
@@ -132,6 +143,7 @@ class App extends Component {
                 onChange={this.filterByColumnChange}
               >
                 <option value="all">All</option>
+                <option value="employeeId">Employee ID</option>
                 <option value="jobTitleName">Title</option>
                 <option value="firstName">First Name</option>
                 <option value="lastName">Last Name</option>
@@ -155,7 +167,6 @@ class App extends Component {
                 id="filter-column"
                 onChange={this.sortByColumnChange}
               >
-                <option value="employeeId">Employee ID</option>
                 <option value="jobTitleName">Title</option>
                 <option value="firstName">First Name</option>
                 <option value="lastName">Last Name</option>
