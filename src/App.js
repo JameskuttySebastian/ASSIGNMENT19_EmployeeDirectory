@@ -5,7 +5,6 @@ import DropdownOption from "./components/DropdownOption";
 
 class App extends Component {
   state = {
-    result: [],
     tableState: "",
     searchColumn: "all",
     searchColumnArray: [],
@@ -15,8 +14,8 @@ class App extends Component {
     searchValueState: ""
   };
 
-  employeeListHtml = () => {
-    let htmlTable = this.state.result.map((employee, index) => (
+  employeeListHtml = resultArray => {
+    let htmlTable = resultArray.map((employee, index) => (
       <TableData
         key={index}
         employeeId={employee.employeeId}
@@ -27,42 +26,31 @@ class App extends Component {
         emailAddress={employee.emailAddress}
       />
     ));
-    // console.log("HTML Table: " + JSON.stringify(htmlTable));
-    this.setState({ tableState: htmlTable });
-    // console.log("Table State: " + this.state.tableState);
+    return htmlTable;
   };
 
-  filterColumnChange = async event => {
-    if (event.target.value) {
-      await this.setState({ searchColumn: event.target.value });
-      this.createDropdownList();
+  filterColumnChange = event => {
+    const searchVal = event.target.value;
+    this.setState({ searchColumn: searchVal });
+    if (searchVal === "all") {
+      this.setState({ tableState: this.employeeListHtml(employees) });
+    } else {
+      this.createDropdownList(searchVal);
       //   console.log("searchColumnChange: " + this.state.searchColumnChange); // this is running after createDropdownList()
     }
   };
 
   filterValueChange = async event => {
-    if (event.target.value) {
-      this.setState({ searchValue: event.target.value });
-
-      if (this.state.searchColumn === "all") {
-        await this.setState({
-          result: employees,
-          searchColumnArray: [],
-          searchColumnChange: false
-        });
-      } else {
-        console.log("searchColumnChange: " + this.state.searchColumnChange);
-        await this.setState({ searchValueChange: true });
-        console.log("searchValueChange: " + this.state.searchValueChange);
-      }
-    }
+    const searchValue = event.target.value;
+    let filteredArray = employees.filter(
+      employee => employee[this.state.searchColumn] === searchValue
+    );
+    this.setState({ tableState: this.employeeListHtml(filteredArray) });
   };
 
-  createDropdownList = async () => {
+  createDropdownList = async searchVal => {
     let colValues = Array.from(
-      new Set(
-        this.state.result.map(employee => employee[this.state.searchColumn])
-      )
+      new Set(employees.map(employee => employee[searchVal]))
     );
     console.log(JSON.stringify(colValues));
     await this.setState({
@@ -83,10 +71,8 @@ class App extends Component {
     }
   };
 
-  async componentDidMount() {
-    await this.setState({ result: employees });
-    this.employeeListHtml();
-    this.createDropdownListMenu();
+  componentDidMount() {
+    this.setState({ tableState: this.employeeListHtml(employees) });
   }
 
   render() {
