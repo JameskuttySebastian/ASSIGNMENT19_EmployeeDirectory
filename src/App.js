@@ -5,11 +5,11 @@ import DropdownOption from "./components/DropdownOption";
 
 class App extends Component {
   state = {
-    tableState: "",
-    searchColumn: "all",
-    searchColumnArray: [],
+    tableRowHtmlArray: "",
+    searchColumnValue: "all",
+    searchColumnValueArray: [],
     searchValue: "",
-    searchValueState: ""
+    searchValueHtmlArray: ""
   };
 
   employeeListHtml = resultArray => {
@@ -29,31 +29,36 @@ class App extends Component {
 
   filterColumnChange = event => {
     const searchVal = event.target.value;
-    this.setState({ searchColumn: searchVal });
+    this.setStateValue( searchColumn, searchVal );
     if (searchVal === "all") {
-      this.setState({
-        tableState: this.employeeListHtml(employees),
-        searchColumnArray: [],
-        searchValue: "",
-        searchValueState: ""
-      });
-    } else {
-      this.createDropdownList(searchVal);
-      //   console.log("searchColumnChange: " + this.state.searchColumnChange); // this is running after createDropdownList()
+        this.setStateValue( searchColumnArray, this.employeeListHtml(employees) );//putting back all the employees
+        this.setStateValue( searchColumnValueArray, [] ); // setting to empty array
+        this.setStateValue( searchValue, "" ); // setting to empty value
+        this.setStateValue( searchValueState, "" );  // setting to empty value    
+    }
+    else {
+      let columnList = this.createDropdownList(searchVal);
+      this.setStateValue( searchColumnValueArray, columnList );
     }
   };
+
+  setStateValue = (stateToUpdate, value) => {
+    this.setState({ stateToUpdate: value });
+  }
 
   createDropdownList = async searchVal => {
     let colValues = Array.from(
       new Set(employees.map(employee => employee[searchVal]))
     );
-    console.log(JSON.stringify(colValues));
-    await this.setState({
-      searchColumnArray: colValues,
-      searchColumnChange: true
-    });
-    this.createDropdownListMenu();
+    return colValues; //retruning column value array  
   };
+
+
+  await this.setState({
+    searchColumnArray: colValues,
+    searchColumnChange: true
+  });
+  this.createDropdownListMenu();
 
   createDropdownListMenu = () => {
     if (this.state.searchColumnArray.length) {
