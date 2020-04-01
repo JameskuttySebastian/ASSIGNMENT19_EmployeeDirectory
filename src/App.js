@@ -39,34 +39,35 @@ class App extends Component {
 
   //Creating dropdown list of distinct values for selected column
   filterColumnChange = event => {
-    const searchVal = event.target.value;
-    this.setStateValue("searchColumn", searchVal);
+    const searchByColumn = event.target.value;
     //if user select back "All", then remove all filters
-    if (searchVal === "all") {
-      this.setStateValue("searchColumnArray", this.employeeListHtml(employees)); //putting back all the employees
+    if (searchByColumn === "all") {
+      this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees)); //putting back all the employees
       this.setStateValue("searchValueHtmlArray", ""); // setting to empty value
     }
     //if user select a specific column, get distinct values and update dropdoen list for column values
     else {
-      let columnList = this.createDropdownList(searchVal); //creating distinct column values
-      let dropdownListHtml = this.createDropdownListMenu(columnList);
-      this.setStateValue("searchColumnValueArray", dropdownListHtml);
+      let columnValueArray = this.createDropdownList(searchByColumn); //creating distinct column values
+      console.log(columnValueArray);
+      let columnValueHtmlArray = this.createDropdownListMenu(columnValueArray);
+      console.log(columnValueHtmlArray);
+      this.setStateValue("searchColumnValueArray", columnValueHtmlArray);
     }
   };
 
-  createDropdownList = async searchVal => {
-    let colValues = Array.from(
-      new Set(employees.map(employee => employee[searchVal]))
+  createDropdownList = searchByColumn => {
+    let columnValueArray = Array.from(
+      new Set(employees.map(employee => employee[searchByColumn]))
     );
-    return colValues; //retruning column value array
+    return columnValueArray; //retruning column value array
   };
 
-  createDropdownListMenu = columnList => {
-    if (this.state.searchColumnValueArray.length) {
-      let dropdownList = this.state.searchColumnValueArray.map((val, index) => (
-        <DropdownOption key={index} value={val} />
-      ));
-      return dropdownList;
+  createDropdownListMenu = uniqueColumnValueArray => {
+    if (uniqueColumnValueArray.length) {
+      let uniqueColumnValueHtmlArray = uniqueColumnValueArray.map(
+        (val, index) => <DropdownOption key={index} value={val} />
+      );
+      return uniqueColumnValueHtmlArray;
     }
   };
 
