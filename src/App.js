@@ -6,13 +6,13 @@ import DropdownOption from "./components/DropdownOption";
 class App extends Component {
   state = {
     tableRowHtmlArray: [],
+    sortedArray: [],
     searchColumnValue: "all",
     searchValueHtmlArray: []
   };
 
   //This is for setting all the states
   setStateValue = (stateToUpdate, value) => {
-    console.log("2. from setStateValue : " + value);
     this.setState({ [stateToUpdate]: value });
   };
 
@@ -40,12 +40,12 @@ class App extends Component {
   //Creating dropdown list of distinct values for selected column
   filterByColumnChange = event => {
     const searchByColumn = event.target.value;
-    console.log("1. searchByColumn : " + searchByColumn);
     //await is used since setstate is asynchronoue
     this.setStateValue("searchColumnValue", searchByColumn); // setting to selected value each time
 
     //if user select back "All", then remove all filters
     if (searchByColumn === "all") {
+      this.setStateValue("searchValueHtmlArray", "");
       this.setStateValue("tableRowHtmlArray", this.employeeListHtml(employees)); //putting back all the employees
       this.setStateValue("searchValueHtmlArray", ""); // setting to empty value
     }
@@ -86,46 +86,101 @@ class App extends Component {
     let filteredEmployeeArray = employees.filter(
       employee => employee[this.state.searchColumnValue] === searchValue
     );
-    console.log(filteredEmployeeArray);
     this.setStateValue(
       "tableRowHtmlArray",
       this.employeeListHtml(filteredEmployeeArray)
     );
   };
 
+  sortByColumnChange = event => {
+    let searchValue = event.target.value;
+
+    // sort by name
+    items.sort(function(a, b) {
+      var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+      var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      // names must be equal
+      return 0;
+    });
+  };
+
   render() {
     return (
-      <div className="container">
-        <h1>Employee Dictionary</h1>
-        {/* This section is statically created since columns are not changing */}
-        <select onChange={this.filterByColumnChange}>
-          <option value="all">All</option>
-          <option value="employeeId">Employee ID</option>
-          <option value="jobTitleName">Title</option>
-          <option value="firstName">First Name</option>
-          <option value="lastName">Last Name</option>
-          <option value="phoneNumber">Phone</option>
-          <option value="emailAddress">Email</option>
-        </select>
-        {/* This section is dynamically created based on column to filter */}
-        <select id="columnValue" onChange={this.filterValueChange}>
-          {this.state.searchValueHtmlArray}
-        </select>
-        {/* This section of the table is statically created since columns are not changing */}
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Employee ID</th>
-              <th scope="col">Title</th>
-              <th scope="col">First Name</th>
-              <th scope="col">Last Name</th>
-              <th scope="col">Phone</th>
-              <th scope="col">Email</th>
-            </tr>
-          </thead>
-          {/* This section of the table is dynamically created */}
-          <tbody>{this.state.tableRowHtmlArray}</tbody>
-        </table>
+      <div>
+        <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+            <h2 class="display-4">Employee Dictionary</h2>
+            <p class="lead">Current employees database for the organisation.</p>
+          </div>
+        </div>
+
+        <div className="container">
+          <div id="wrapper" className="col-sm-12 col-md-12">
+            <div id="left" className="col-sm-12 col-md-6">
+              {/* This section is statically created since columns are not changing */}
+              <label className="col-sm-12 col-md-6">Filter by:</label>
+              <select
+                className="col-sm-12 col-md-6 select-css"
+                id="filter-column"
+                onChange={this.filterByColumnChange}
+              >
+                <option value="all">All</option>
+                <option value="jobTitleName">Title</option>
+                <option value="firstName">First Name</option>
+                <option value="lastName">Last Name</option>
+                <option value="phoneNumber">Phone</option>
+                <option value="emailAddress">Email</option>
+              </select>
+              {/* This section is dynamically created based on column to filter */}
+              <label className="col-sm-12 col-md-6">Filter value:</label>
+              <select
+                className="col-sm-12 col-md-6 select-css"
+                id="filter-value"
+                onChange={this.filterValueChange}
+              >
+                {this.state.searchValueHtmlArray}
+              </select>
+            </div>
+            <div id="right" className="col-sm-12 col-md-6">
+              <label className="col-sm-12 col-md-6">Sort by:</label>
+              <select
+                className="col-sm-12 col-md-6 select-css"
+                id="filter-column"
+                onChange={this.sortByColumnChange}
+              >
+                <option value="employeeId">Employee ID</option>
+                <option value="jobTitleName">Title</option>
+                <option value="firstName">First Name</option>
+                <option value="lastName">Last Name</option>
+                <option value="phoneNumber">Phone</option>
+                <option value="emailAddress">Email</option>
+              </select>
+            </div>
+          </div>
+
+          {/* This section of the table is statically created since columns are not changing */}
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Employee ID</th>
+                <th scope="col">Title</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Email</th>
+              </tr>
+            </thead>
+            {/* This section of the table is dynamically created */}
+            <tbody>{this.state.tableRowHtmlArray}</tbody>
+          </table>
+        </div>
       </div>
     );
   }
