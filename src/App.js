@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import employees from "../src/util/data/data.json";
 import TableData from "./components/TableData";
+import Heading from "./components/Heading";
 import DropdownOption from "./components/DropdownOption";
 
 class App extends Component {
@@ -125,15 +126,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <div className="jumbotron jumbotron-fluid">
-          <div className="container">
-            <h2 className="display-4">Employee Dictionary</h2>
-            <p className="lead">
-              Current employees database for the organisation.
-            </p>
-          </div>
-        </div>
-
+        <Heading />
         <div className="container">
           <div id="wrapper" className="col-sm-12 col-md-12">
             <div id="left" className="col-sm-12 col-md-6">
