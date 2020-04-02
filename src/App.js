@@ -105,7 +105,6 @@ class App extends Component {
 
   sortByColumnChange = event => {
     let searchValue = event.target.value;
-    console.log(searchValue);
     // sort by name
     let sortedObjectArray = this.state.sortedArray.sort(function(a, b) {
       var nameA = a[searchValue];
