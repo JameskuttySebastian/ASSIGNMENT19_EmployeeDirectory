@@ -31,3 +31,11 @@ The user will be able to:
 
 * Heroku
   > https://blueberry-custard-58021.herokuapp.com/
+
+## Home Page
+
+![Home Page](./public/img/home.png)
+
+## Home Page
+
+![Responsive Home Page](./public/img/responsiveHome.png)
