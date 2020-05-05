@@ -28,9 +28,15 @@ The user will be able to:
 - React
 - Node
 
+# Links
+
+## Repository
+
 * Github
 
   > https://github.com/JameskuttySebastian/EmployeeDirectory
+
+## Deployed Application URL
 
 * Heroku
   > https://blueberry-custard-58021.herokuapp.com/
